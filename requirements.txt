@@ -1,0 +1,13 @@
+streamlit
+pandas
+urllib3
+beautifulsoup4
+openai-whisper
+transformers
+numpy
+soundfile
+pydub
+bitsandbytes
+accelerate
+langchain-community
+TTS
