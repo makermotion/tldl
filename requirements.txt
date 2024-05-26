@@ -3,9 +3,6 @@ urllib3>=2.2.1
 beautifulsoup4>=4.12.3
 openai-whisper>=20231117
 numpy
-soundfile
-pydub
-bitsandbytes
 langchain-community>=0.0.36
 langchain-core>=0.1.50
 TTS>=0.22.0

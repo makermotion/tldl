@@ -8,9 +8,7 @@ from urllib.request import urlopen
 
 import numpy as np
 import requests
-import soundfile as sf
 from bs4 import BeautifulSoup as soup
-from pydub import AudioSegment
 from tqdm import tqdm
 
 
