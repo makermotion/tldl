@@ -1,6 +1,9 @@
 # CHANGELOG
 
 
+## v0.0.2 (2024-12-08)
+
+
 ## v0.0.1 (2024-12-08)
 
 ### Bug Fixes
@@ -10,6 +13,9 @@
 
 - Github actions
   ([`ea377df`](https://github.com/makermotion/tldl/commit/ea377df12d5feb1321a16874e09716a77eccd88d))
+
+- Github actions, semver
+  ([`b749ec8`](https://github.com/makermotion/tldl/commit/b749ec82dc63e70d6df9d087ff5a557ed723d7be))
 
 - Github actions, semver
   ([`9b16893`](https://github.com/makermotion/tldl/commit/9b16893af244f60c54d5c8b2dc618dd6aa3af89b))
