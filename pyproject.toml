@@ -41,7 +41,7 @@ Homepage = "https://github.com/makermotion/tldl"
 Repository = "https://github.com/makermotion/tldl"
 
 [tool.semantic_release]
-version_variables = ["tldl/__init__.py:__version__"]
+version_variables = ["__init__.py:__version__"]
 version_toml = ["pyproject.toml:project.version"]
 commit_parser = "angular"
 major_on_zero = true
