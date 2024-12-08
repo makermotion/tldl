@@ -3,15 +3,17 @@ name: Release
 on:
   push:
     branches:
-      - master # Updated to match your branch name from pyproject.toml
+      - master
 
 jobs:
   release:
     runs-on: ubuntu-latest
     concurrency: release
     permissions:
-      id-token: write
       contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
 
     steps:
       - name: Checkout code
@@ -31,6 +33,10 @@ jobs:
           pip install build twine
 
       - name: Run Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          semantic-release version
-          semantic-release publish
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          python -m semantic_release version
+          python -m semantic_release publish
