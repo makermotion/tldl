@@ -3,27 +3,38 @@ name: Release
 on:
   push:
     branches:
-      - master # Or your default branch
+      - master # Updated to match your branch name from pyproject.toml
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      id-token: write
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10" # Choose your Python version
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
-          pip install semantic-release
+          python -m pip install --upgrade pip
+          pip install python-semantic-release
+          pip install build twine
 
       - name: Run Semantic Release
         env:
-          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: semantic-release publish
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "action@github.com"
+          semantic-release version
+          semantic-release publish

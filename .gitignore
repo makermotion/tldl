@@ -4,3 +4,4 @@ __pycache__
 transcripts/
 summary_audio/
 env/
+build/

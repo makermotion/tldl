@@ -43,7 +43,7 @@ Repository = "https://github.com/makermotion/tldl"
 [tool.semantic_release]
 version_variable = "tldl/__init__.py:__version__"
 upload_to_pypi = true
-branch = "main"
+branch = "master"
 patch_without_tag = false
 
 [tool.semantic_release.commit_parser]
