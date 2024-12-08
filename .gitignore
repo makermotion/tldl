@@ -3,3 +3,4 @@ __pycache__
 *.wav
 transcripts/
 summary_audio/
+env/

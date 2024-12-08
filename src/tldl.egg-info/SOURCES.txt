@@ -1,0 +1,15 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+src/__init__.py
+src/app.py
+src/download_podcast.py
+src/prompt_templates.py
+src/summarizer.py
+src/tts_modules.py
+src/tldl.egg-info/PKG-INFO
+src/tldl.egg-info/SOURCES.txt
+src/tldl.egg-info/dependency_links.txt
+src/tldl.egg-info/requires.txt
+src/tldl.egg-info/top_level.txt

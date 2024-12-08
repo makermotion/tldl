@@ -1,0 +1,99 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tldl"
+version = "0.1.0"
+description = "A podcast summarizer"
+authors = [{ name = "maskedpirate", email = "muratcan.kurtulus@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+dependencies = [
+  "streamlit",
+  "urllib3",
+  "beautifulsoup4",
+  "openai-whisper",
+  "numpy",
+  "langchain-community",
+  "langchain-core",
+  "TTS",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=6.0",
+  "pytest-cov",
+  "black",
+  "isort",
+  "flake8",
+  "python-semantic-release",
+]
+
+[project.urls]
+Homepage = "https://github.com/makermotion/tldl"
+Repository = "https://github.com/makermotion/tldl"
+
+[tool.semantic_release]
+version_variable = "tldl/__init__.py:__version__"
+upload_to_pypi = true
+branch = "main"
+patch_without_tag = false
+
+[tool.semantic_release.commit_parser]
+message_format = "conventional"
+
+[tool.semantic_release.changelog]
+changelog_file = "CHANGELOG.md"
+changelog_sections = [
+  "feat",
+  "fix",
+  "docs",
+  "style",
+  "refactor",
+  "test",
+  "build",
+  "ci",
+  "perf",
+  "revert",
+]
+
+[tool.semantic_release.version_source]
+source = "file"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-v --cov=tldl"
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 120
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 120
+known_first_party = ["tldl"]
+known_third_party = ["numpy", "requests", "torch", "transformers"]
+
+[tool.coverage.run]
+branch = true
+source = ["tldl"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "if __name__ == .__main__.:",
+  "raise NotImplementedError",
+  "raise ImportError",
+  "except ImportError:",
+]
+show_missing = true
