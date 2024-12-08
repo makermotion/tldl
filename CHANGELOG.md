@@ -1,7 +1,15 @@
 # CHANGELOG
 
 
+## v0.0.3 (2024-12-08)
+
+
 ## v0.0.2 (2024-12-08)
+
+### Bug Fixes
+
+- Github actions
+  ([`16508cb`](https://github.com/makermotion/tldl/commit/16508cb5e6493d56ccb9f9e8a3be779b324d2d35))
 
 
 ## v0.0.1 (2024-12-08)
