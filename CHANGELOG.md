@@ -1,7 +1,15 @@
 # CHANGELOG
 
 
+## v0.1.1 (2024-12-15)
+
+
 ## v0.1.0 (2024-12-15)
+
+### Bug Fixes
+
+- Update README.py
+  ([`6486909`](https://github.com/makermotion/tldl/commit/6486909bdb1113768e43805efd254e78b82bdce7))
 
 
 ## v0.0.3 (2024-12-08)
