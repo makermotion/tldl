@@ -1,127 +1,105 @@
-import io
-import logging
+from ytmusicapi import YTMusic
+import yt_dlp
 import os
-import tempfile
-from pathlib import Path
-from urllib.parse import quote, urlparse
-from urllib.request import urlopen
-
-import numpy as np
-import requests
-from bs4 import BeautifulSoup as soup
-from tqdm import tqdm
+from typing import List, Optional
 
 
 class PodcastDownloader:
-    """A class to download podcasts from Google Podcasts."""
-
-    def __init__(self, base_url='https://podcasts.google.com'):
-        """Initializes the PodcastDownloader object.
+    def __init__(self, output_dir: str = "downloads"):
+        """Initialize PodcastDownloader.
 
         Args:
-            base_url (str): The base URL for Google Podcasts.
+            output_dir (str): Directory for downloaded podcasts
         """
-        self.base_url = base_url
+        self.ytmusic = YTMusic()
+        self.output_dir = output_dir
+        os.makedirs(output_dir, exist_ok=True)
 
-    def _prepare_url_for_google(self, podcast_name):
-        """Constructs the search URL for the given podcast name.
+        # Configure yt-dlp options
+        self.ydl_opts = {
+            "format": "bestaudio/best",
+            "postprocessors": [
+                {
+                    "key": "FFmpegExtractAudio",
+                    "preferredcodec": "mp3",
+                    "preferredquality": "192",
+                }
+            ],
+            "outtmpl": os.path.join(output_dir, "%(title)s.%(ext)s"),
+            "quiet": True,
+        }
+
+    def get_episode_names(self, podcast_name: str) -> List[str]:
+        """Get list of episode names for a podcast.
 
         Args:
-            podcast_name (str): The name of the podcast to search for.
+            podcast_name (str): Name of the podcast to search
+
         Returns:
-            str: The search URL for the given podcast name.
+            List[str]: List of episode names
         """
-        podcast_name_safe = quote(podcast_name.encode('utf-8'))
-        logging.info(f"Podcast Name SAFE: {podcast_name}")
-        return f'{self.base_url}/search/{podcast_name_safe}'
+        try:
+            # Search for the podcast
+            results = self.ytmusic.search(podcast_name, filter="podcasts", limit=1)
+            if not results:
+                return []
 
-    def _get_content(self, url):
-        """Retrieves the HTML content from the given URL.
+            # Get podcast details
+            podcast = self.ytmusic.get_podcast(results[0]["browseId"])
+            if not podcast or "episodes" not in podcast:
+                return []
+
+            # Extract episode names
+            return [episode["title"] for episode in podcast["episodes"]]
+
+        except Exception as e:
+            print(f"Error getting episode names: {e}")
+            return []
+
+    def get_episode_download_links(self, podcast_name: str) -> List[str]:
+        """Get download links for podcast episodes.
 
         Args:
-            url (str): The URL to fetch the content from.
+            podcast_name (str): Name of the podcast to search
+
         Returns:
-            BeautifulSoup: The parsed HTML content.
+            List[str]: List of episode download links (video IDs)
         """
+        try:
+            # Search for the podcast
+            results = self.ytmusic.search(podcast_name, filter="podcasts", limit=1)
+            if not results:
+                return []
 
-        client = urlopen(url)
-        html_content = client.read()
-        client.close()
-        return soup(html_content, 'html.parser')
+            # Get podcast details
+            podcast = self.ytmusic.get_podcast(results[0]["browseId"])
+            if not podcast or "episodes" not in podcast:
+                return []
 
-    def _go2show(self, content):
-        """Finds the full show URL from the parsed HTML content.
+            # Extract video IDs
+            return [episode["videoId"] for episode in podcast["episodes"]]
+
+        except Exception as e:
+            print(f"Error getting download links: {e}")
+            return []
+
+    def download_podcast(self, video_id: str) -> Optional[str]:
+        """Download podcast episode.
 
         Args:
-            content (BeautifulSoup): The parsed HTML content.
+            video_id (str): YouTube video ID
+
         Returns:
-            str: The full show URL.
+            Optional[str]: Path to downloaded MP3 file
         """
-
-        full_show = content.find('a', {'class': 'pyK9td'}, href=True)
-        full_show_url = f'{self.base_url}/{full_show["href"][2:]}'
-        return full_show_url
-
-    def get_episode_names(self, podcast_name):
-        """Retrieves the episode names.
-
-        Args:
-            full_show_page_content (BeautifulSoup): The BeautifulSoup object containing the parsed HTML content.
-        Returns:
-            list: A list of episode names.
-        """
-
-        url = self._prepare_url_for_google(podcast_name)
-        content = self._get_content(url)
-        full_show_url = self._go2show(content)
-        full_show_page_content = self._get_content(full_show_url)
-        episode_names = full_show_page_content.findAll('div',
-                                                       {'class': 'LTUrYb'})
-        names = [name.text for name in episode_names]
-        return names
-
-    def get_episode_download_links(self, podcast_name):
-        """Retrieves the episode download links.
-
-        Args:
-            podcast_name (str): The name of the podcast to search for.
-        Returns:
-            list: A list of episode download links.
-        """
-
-        url = self._prepare_url_for_google(podcast_name)
-        content = self._get_content(url)
-        full_show_url = self._go2show(content)
-        full_show_page_content = self._get_content(full_show_url)
-        episode_links = full_show_page_content.findAll('div',
-                                                       {'jsname': 'fvi9Ef'})
-        links = [link['jsdata'][7:] for link in episode_links]
-        return links
-
-    def _get_mp3(self, url):
-        """Retrieves the MP3 file from the provided URL and converts it into
-        numpy array.
-
-        Args:
-            url (str): The URL of the MP3 file.
-        Returns:
-            str: The path to the saved MP3 file.
-            np.array: The MP3 file as a numpy array.
-        """
-        mp3_bytes = requests.get(url, stream=True).content
-        with tempfile.NamedTemporaryFile(delete=False) as fp:
-            fp.write(mp3_bytes)
-            fp.close()
-            return fp.name, mp3_bytes
-
-    def download_podcast(self, episode_url):
-        """Downloads the podcast episode from the provided URL.
-
-        Args:
-            episode_url (str): The URL of the podcast episode.
-            dir_to_save (str): The directory to save the episode to.
-        Returns:
-            str: The name of the saved MP3 file.
-        """
-        mp3_name, _ = self._get_mp3(episode_url)
-        return mp3_name
+        url = f"https://www.youtube.com/watch?v={video_id}"
+        try:
+            with yt_dlp.YoutubeDL(self.ydl_opts) as ydl:
+                info = ydl.extract_info(url, download=True)
+                filename = ydl.prepare_filename(info)
+                # Return the MP3 filename
+                mp3_path = os.path.splitext(filename)[0] + ".mp3"
+                return mp3_path
+        except Exception as e:
+            print(f"Download error: {e}")
+            return None

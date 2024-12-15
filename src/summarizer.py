@@ -1,9 +1,9 @@
 """Summarize a podcast using whisper and langchain_community."""
+
 import gc
 import logging
 import os
 from pathlib import Path
-from time import sleep
 
 import torch
 import whisper
@@ -31,11 +31,7 @@ def read_cache(cache_path):
         return cf.read()
 
 
-def summarize(mp3_path,
-              podcast_name,
-              language,
-              device,
-              from_cache: str = None):
+def summarize(mp3_path, podcast_name, language, device, from_cache=None):
     """Summarize a podcast.
 
     Args:
@@ -62,17 +58,11 @@ def summarize(mp3_path,
         transcript = read_cache(from_cache)
     torch.cuda.empty_cache()
     gc.collect()
-    logging.info(
-        "Reading the full transcription successful!, Summarizing...\n")
+    logging.info("Reading the full transcription successful!, Summarizing...\n")
     prompt = PromptTemplate.from_template(template)
-    llm = ChatOllama(model="llama3:instruct",
-                     base_url="http://127.0.0.1:11434",
-                     keep_alive=0)
+    llm = ChatOllama(model="llama3.2", base_url="http://127.0.0.1:11434", keep_alive=0)
     chain = prompt | llm
-    summary = chain.invoke({
-        "transcript": transcript["text"],
-        "language": language
-    })
+    summary = chain.invoke({"transcript": transcript["text"], "language": language})
     summary_path = f"{root_path}/transcripts/{podcast_name}_summary.txt"
     with open(summary_path, "w+") as tf:
         tf.write(summary.content)

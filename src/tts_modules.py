@@ -1,13 +1,11 @@
 # Description: Text to speech using the TTS model.
 import argparse
 import os
-import typing
 from pathlib import Path
 
-import torch
 from TTS.api import TTS
 
-parser = argparse.ArgumentParser(description='TTS')
+parser = argparse.ArgumentParser(description="TTS")
 parser.add_argument("-o", "--output", type=str)
 parser.add_argument("-s", "--speaker", type=str)
 parser.add_argument("-t", "--text-file", type=str)
@@ -34,7 +32,7 @@ def select_model(language: str) -> str:
 
     dict_model = {
         "en": ("tts_models/multilingual/multi-dataset/your_tts", True),
-        "tr": ("tts_models/tr/common-voice/glow-tts", False)
+        "tr": ("tts_models/tr/common-voice/glow-tts", False),
     }
     return dict_model[language][0], dict_model[language][1]
 
@@ -53,8 +51,13 @@ def get_text_from_file(text_file: str) -> str:
     return text
 
 
-def do_tts_voice_clone(text_file: str, speaker_wav_path: str,
-                       output_wav_path: str, language: str, device: str):
+def do_tts_voice_clone(
+    text_file: str,
+    speaker_wav_path: str,
+    output_wav_path: str,
+    language: str,
+    device: str,
+):
     """Text to speech using the TTS model.
 
     Args:
@@ -68,10 +71,12 @@ def do_tts_voice_clone(text_file: str, speaker_wav_path: str,
     selected_model, is_multilingual = select_model(language)
     text = get_text_from_file(text_file)
     tts = TTS(selected_model).to(device)
-    tts.tts_with_vc_to_file(text,
-                            speaker_wav=speaker_wav_path,
-                            file_path=output_wav_path,
-                            language=language if is_multilingual else None)
+    tts.tts_with_vc_to_file(
+        text,
+        speaker_wav=speaker_wav_path,
+        file_path=output_wav_path,
+        language=language if is_multilingual else None,
+    )
 
 
 def do_tts(text_file: str, podcast_name: str, language: str, device: str):

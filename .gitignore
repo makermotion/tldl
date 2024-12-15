@@ -1,7 +1,36 @@
-.ipynb_checkpoints/
-__pycache__
-*.wav
-transcripts/
-summary_audio/
-env/
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+*.egg-info/
+*.egg
 build/
+dist/
+
+# Virtual environments
+env/
+venv/
+.env/
+.venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Project specific directories
+downloads/
+*/downloads/
+summary_audio/
+*/summary_audio/
+transcripts/
+*/transcripts/
+
+# Audio files
+*.wav
+*.mp3
+*.m4a
+
+# IDE settings
+.vscode/
+.idea/
