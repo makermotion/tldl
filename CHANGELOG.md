@@ -1,7 +1,15 @@
 # CHANGELOG
 
 
+## v0.1.0 (2024-12-15)
+
+
 ## v0.0.3 (2024-12-08)
+
+### Features
+
+- Migrate to youtube music podcasts
+  ([`882fe83`](https://github.com/makermotion/tldl/commit/882fe8346ffc478ff37a9ff569d471a90d4239cc))
 
 
 ## v0.0.2 (2024-12-08)
