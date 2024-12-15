@@ -7,7 +7,7 @@ tl;dl is an AI-powered podcast summarization tool that converts Google Podcasts 
 
 ## Features
 
-- 🎙️ Download podcasts from Google Podcasts
+- 🎙️ Download podcasts from YouTube Music Podcasts
 - 📝 Transcribe audio to text using OpenAI's Whisper
 - 🤖 Generate summaries using local LLM through Ollama
 - 🗣️ Convert summaries back to speech using TTS
